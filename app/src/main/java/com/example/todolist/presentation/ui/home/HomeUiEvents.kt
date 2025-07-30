@@ -1,4 +1,4 @@
-package com.example.todolist.presentation.ui.event
+package com.example.todolist.presentation.ui.home
 
 import com.example.todolist.MainActivity
 import com.example.todolist.data.Tasks

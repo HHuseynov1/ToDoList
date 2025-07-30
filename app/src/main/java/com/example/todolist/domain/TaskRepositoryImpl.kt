@@ -8,6 +8,16 @@ import javax.inject.Inject
 class TaskRepositoryImpl @Inject constructor(private val localDataSource: LocalDataSource,
 ): TaskRepository {
 
+    override suspend fun onChangeTask(tasks: Tasks) {
+        val localChange = localDataSource.onChangeTask(tasks)
+        return localChange
+    }
+
+    override suspend fun deleteTask(tasks: Tasks) {
+        val localDelete = localDataSource.deleteTask(tasks)
+        return localDelete
+    }
+
     override suspend fun insertTask(tasks : Tasks) {
         val localTasks = localDataSource.insertTask(tasks)
         return localTasks

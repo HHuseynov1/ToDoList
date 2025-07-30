@@ -1,4 +1,4 @@
-package com.example.todolist.OnBoarding
+package com.example.todolist.presentation.ui.OnBoarding
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,8 +28,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.room.util.TableInfo
 import com.example.todolist.R
 import com.example.todolist.ui.theme.GrayToDo
 import com.example.todolist.ui.theme.interFont

@@ -1,4 +1,4 @@
-package com.example.todolist
+package com.example.todolist.presentation.ui.home
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +16,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -31,9 +32,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.example.todolist.MainActivity
 import com.example.todolist.data.Tasks
-import com.example.todolist.presentation.ui.event.HomeUiEvents
-import com.example.todolist.presentation.ui.viewmodel.HomeViewModel
+import com.example.todolist.presentation.ui.home.HomeUiEvents
+import com.example.todolist.presentation.ui.home.components.Items
 import com.example.todolist.ui.theme.BtnAddColor
 import com.example.todolist.ui.theme.BtnSelectedColor
 import com.example.todolist.ui.theme.BtnTextColor
@@ -42,9 +44,11 @@ import com.example.todolist.ui.theme.interFont
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreenContent(viewModel: HomeViewModel) {
-
-    val pagerState = rememberPagerState { 3 }
+fun HomeScreenContent(
+    state: HomeUiState,
+    onEvent : (HomeUiEvents) ->Unit
+) {
+    val pagerState = rememberPagerState (pageCount = { MainActivity.FilterType.entries.size})
 
     Scaffold(
         topBar = {
@@ -74,67 +78,30 @@ fun HomeScreenContent(viewModel: HomeViewModel) {
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
 
-                    val currentPage by viewModel.homeUiState.collectAsState()
-
-                    val currentFilter = currentPage.filterChange
+                    val currentFilter = state.filterChange
                     Log.e("currentFilter", currentFilter.toString())
 
                     val scope = rememberCoroutineScope()
 
-                    Button(
-                        onClick = {
-                            scope.launch {
-                                viewModel.homeUiEvent(HomeUiEvents.filterChange(MainActivity.FilterType.ALL))
-                                pagerState.animateScrollToPage(1)
-                            }
-                        },
-                        Modifier.width(120.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = if (currentFilter == MainActivity.FilterType.ALL) ButtonDefaults.buttonColors(
-                            containerColor = BtnSelectedColor
-                        ) else ButtonDefaults.buttonColors(containerColor = CardBacgroundColor)
-                    )
-                    {
-                        Text(
-                            "All",
-                            color = BtnTextColor
-                        )
-                    }
-                    Button(
-                        onClick = {
-                            scope.launch {
-                                viewModel.homeUiEvent(HomeUiEvents.filterChange(MainActivity.FilterType.ACTIVE))
-                                pagerState.animateScrollToPage(2)
-                            }
-                        },
-                        Modifier.width(120.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = if (currentFilter == MainActivity.FilterType.ACTIVE) ButtonDefaults.buttonColors(
-                            containerColor = BtnSelectedColor
-                        ) else ButtonDefaults.buttonColors(containerColor = CardBacgroundColor)
-                    ) {
-                        Text(
-                            "Active",
-                            color = BtnTextColor
-                        )
-                    }
-                    Button(
-                        onClick = {
-                            scope.launch {
-                                viewModel.homeUiEvent(HomeUiEvents.filterChange(MainActivity.FilterType.COMPLETED))
-                                pagerState.animateScrollToPage(3)
-                            }
-                        },
-                        Modifier.width(120.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = if (currentFilter == MainActivity.FilterType.COMPLETED) ButtonDefaults.buttonColors(
-                            containerColor = BtnSelectedColor
-                        ) else ButtonDefaults.buttonColors(containerColor = CardBacgroundColor)
-                    ) {
-                        Text(
-                            "Completed",
-                            color = BtnTextColor
-                        )
+                    MainActivity.FilterType.entries.forEach { type ->
+                        Button(
+                            onClick = {
+                                scope.launch {
+                                    onEvent(HomeUiEvents.filterChange(type))
+                                    pagerState.animateScrollToPage(type.ordinal)
+                                }
+                            },
+                            Modifier.width(120.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            colors = if (currentFilter == type) ButtonDefaults.buttonColors(
+                                containerColor = BtnSelectedColor
+                            ) else ButtonDefaults.buttonColors(containerColor = CardBacgroundColor)
+                        ) {
+                            Text(
+                                text = type.name,
+                                color = BtnTextColor
+                            )
+                        }
                     }
                 }
             }
@@ -167,8 +134,7 @@ fun HomeScreenContent(viewModel: HomeViewModel) {
                 Button(
                     onClick = {
                         if (textFieldState.isNotEmpty()) {
-                            viewModel.homeUiEvent(
-                                HomeUiEvents.addTask(
+                            onEvent(HomeUiEvents.addTask(
                                     Tasks(
                                         0,
                                         false,
@@ -200,15 +166,18 @@ fun HomeScreenContent(viewModel: HomeViewModel) {
         content = { innerPadding ->
             Box(Modifier.padding(innerPadding)) {
 
-                val homeUiState by viewModel.homeUiState.collectAsState()
-
-                val currentFilter = homeUiState.filterChange
+                val currentFilter = state.filterChange
 
                 val filteredList = when (currentFilter) {
 
-                    MainActivity.FilterType.ALL -> homeUiState.all.reversed().sortedBy { it.iSelected }
-                    MainActivity.FilterType.ACTIVE -> homeUiState.all.filter { !it.iSelected }.reversed()
-                    MainActivity.FilterType.COMPLETED -> homeUiState.all.filter { it.iSelected }.reversed()
+                    MainActivity.FilterType.ALL -> state.all.reversed()
+                        .sortedBy { it.iSelected }
+
+                    MainActivity.FilterType.ACTIVE -> state.all.filter { !it.iSelected }
+                        .reversed()
+
+                    MainActivity.FilterType.COMPLETED -> state.all.filter { it.iSelected }
+                        .reversed()
                 }
 
                 Log.e("filteredList", filteredList.size.toString())
@@ -228,10 +197,10 @@ fun HomeScreenContent(viewModel: HomeViewModel) {
                                 Items(
                                     task = task,
                                     onToggle = { updatedTask ->
-                                        viewModel.homeUiEvent(HomeUiEvents.update(updatedTask))
+                                        onEvent(HomeUiEvents.update(updatedTask))
                                     },
                                     onDelete = { deletedTask ->
-                                        viewModel.homeUiEvent(HomeUiEvents.deleteItem(deletedTask))
+                                        onEvent(HomeUiEvents.deleteItem(deletedTask))
                                     }
                                 )
                             }

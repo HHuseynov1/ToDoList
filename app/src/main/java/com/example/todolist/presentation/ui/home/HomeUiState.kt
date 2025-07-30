@@ -1,7 +1,5 @@
-package com.example.todolist.presentation.ui.state
+package com.example.todolist.presentation.ui.home
 
-import android.os.Message
-import androidx.compose.material3.FilterChip
 import com.example.todolist.MainActivity
 import com.example.todolist.data.Tasks
 

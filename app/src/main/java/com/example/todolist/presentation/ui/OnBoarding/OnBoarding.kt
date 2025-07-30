@@ -1,4 +1,4 @@
-package com.example.todolist.OnBoarding
+package com.example.todolist.presentation.ui.OnBoarding
 
 data class OnBoarding(
     val image: Int,

@@ -9,6 +9,10 @@ class RoomLocalDataSource @Inject constructor(
     private val dao: TaskDao
 ) : LocalDataSource {
 
+    override suspend fun onChangeTask(tasks: Tasks) = dao.onChangeTask(tasks)
+
+    override suspend fun deleteTask(tasks: Tasks) = dao.deleteTask(tasks)
+
     override suspend fun insertTask(tasks: Tasks) = dao.insertTask(tasks)
 
     override suspend fun getLocalData() = dao.getTasksForAll()

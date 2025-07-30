@@ -1,4 +1,4 @@
-package com.example.todolist.presentation.di
+package com.example.todolist.di
 
 import android.content.Context
 import androidx.room.Room
@@ -8,6 +8,7 @@ import com.example.todolist.data.TasksDatabase
 import com.example.todolist.domain.RoomLocalDataSource
 import com.example.todolist.domain.TaskRepository
 import com.example.todolist.domain.TaskRepositoryImpl
+import com.example.todolist.presentation.ui.OnBoarding.OnBoardingUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,6 +45,14 @@ object NetworkModule {
         localDataSource: LocalDataSource,
     ): TaskRepository {
         return TaskRepositoryImpl(localDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOnBoardingUtils(
+        @ApplicationContext context: Context
+    ): OnBoardingUtils {
+        return OnBoardingUtils(context)
     }
 
 }
