@@ -7,8 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.input.key.Key.Companion.Home
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -49,22 +47,22 @@ class MainActivity : ComponentActivity() {
         COMPLETED
     }
 
-    @Composable
-    fun Home() {
-        val viewModel = hiltViewModel<HomeViewModel>()
-        val state by viewModel.homeUiState.collectAsState()
-
-        HomeScreenContent(
-            state = state,
-            onEvent = viewModel::homeUiEvent
-        )
-    }
+//    @Composable
+//    fun Home() {
+//        val viewModel = hiltViewModel<HomeViewModel>()
+//        val state by viewModel.homeUiState.collectAsState()
+//
+//        HomeScreenContent(
+//            state = state,
+//            onEvent = viewModel::homeUiEvent
+//        )
+//    }
 
     @Preview(showBackground = true)
     @Composable
     fun GreetingPreview() {
         ToDoListTheme {
-            Home()
+            MainNavHost(navController = rememberNavController())
         }
     }
 }

@@ -29,6 +29,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -46,9 +47,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreenContent(
     state: HomeUiState,
-    onEvent : (HomeUiEvents) ->Unit
+    onEvent: (HomeUiEvents) -> Unit
 ) {
-    val pagerState = rememberPagerState (pageCount = { MainActivity.FilterType.entries.size})
+    val pagerState = rememberPagerState(pageCount = { MainActivity.FilterType.entries.size })
 
     Scaffold(
         topBar = {
@@ -72,10 +73,11 @@ fun HomeScreenContent(
                 Row(
                     Modifier
                         .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                         .constrainAs(boxSelections) {
                             top.linkTo(anchor = txtTitle.bottom, 20.dp)
                         },
-                    horizontalArrangement = Arrangement.SpaceAround
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
                 ) {
 
                     val currentFilter = state.filterChange
@@ -91,7 +93,7 @@ fun HomeScreenContent(
                                     pagerState.animateScrollToPage(type.ordinal)
                                 }
                             },
-                            Modifier.width(120.dp),
+                            modifier = Modifier.weight(1f),
                             shape = RoundedCornerShape(8.dp),
                             colors = if (currentFilter == type) ButtonDefaults.buttonColors(
                                 containerColor = BtnSelectedColor
@@ -99,7 +101,8 @@ fun HomeScreenContent(
                         ) {
                             Text(
                                 text = type.name,
-                                color = BtnTextColor
+                                color = BtnTextColor,
+                                fontSize = 10.sp
                             )
                         }
                     }
@@ -109,17 +112,17 @@ fun HomeScreenContent(
         bottomBar = {
             var textFieldState by remember { mutableStateOf("") }
 
-            ConstraintLayout(Modifier.fillMaxWidth()) {
+                //val bottomGuideLine = createGuidelineFromBottom(0.5f)
 
-                val bottomGuideLine = createGuidelineFromBottom(0.5f)
-
-                val (txtField, btnAdd) = createRefs()
-
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 TextField(
                     modifier = Modifier
-                        .constrainAs(txtField) {
-                            bottom.linkTo(bottomGuideLine)
-                        }
+//                        .constrainAs(txtField) {
+//                            bottom.linkTo(bottomGuideLine)
+//                        }
                         .height(56.dp)
                         .padding(start = 10.dp),
                     value = textFieldState,
@@ -134,7 +137,8 @@ fun HomeScreenContent(
                 Button(
                     onClick = {
                         if (textFieldState.isNotEmpty()) {
-                            onEvent(HomeUiEvents.addTask(
+                            onEvent(
+                                HomeUiEvents.addTask(
                                     Tasks(
                                         0,
                                         false,
@@ -148,18 +152,11 @@ fun HomeScreenContent(
 
                         Log.e("textFieldState", textFieldState)
                     },
-                    Modifier
-                        .constrainAs(btnAdd) {
-                            start.linkTo(txtField.end)
-                            bottom.linkTo(txtField.bottom)
-                            end.linkTo(parent.end)
-                            top.linkTo(txtField.top)
-                        }
-                        .height(56.dp),
+                    modifier = Modifier.height(56.dp).padding(end = 10.dp),
                     colors = ButtonDefaults.buttonColors(BtnAddColor),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("Add")
+                    Text("Add", modifier = Modifier.padding(vertical = 8.dp))
                 }
             }
         },
@@ -211,4 +208,12 @@ fun HomeScreenContent(
         }
     )
 
+}
+
+@Preview
+@Composable
+fun Preview() {
+    HomeScreenContent(
+        HomeUiState()
+    ) { }
 }

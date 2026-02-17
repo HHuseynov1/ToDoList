@@ -74,7 +74,7 @@ fun OnBoardingScreen(onFinished: () -> Unit) {
                     Text(
                         "Pick some new habits to get started",
                         fontFamily = interFont,
-                        fontSize = 38.sp,
+                        fontSize = 36.sp,
                         color = Color.Black,
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
@@ -96,14 +96,13 @@ fun OnBoardingScreen(onFinished: () -> Unit) {
                         onClick = { onFinished() },
                         Modifier
                             .fillMaxWidth()
-                            .height(70.dp)
                             .padding(horizontal = 16.dp),
 
                         colors = ButtonDefaults.buttonColors(containerColor = GrayToDo),
                         shape = RoundedCornerShape(12.dp),
 
                         ) {
-                        Text("Continue")
+                        Text("Continue", modifier = Modifier.padding(vertical = 8.dp))
                     }
                 }
 
