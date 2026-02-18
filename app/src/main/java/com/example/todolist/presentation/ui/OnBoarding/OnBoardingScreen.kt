@@ -53,66 +53,69 @@ fun OnBoardingScreen(onFinished: () -> Unit) {
     var onBoardingData by remember { mutableStateOf(onBoardingList) }
 
     Surface {
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .background(Color.White)
-            ) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(Color.White)
+        ) {
 
-                Image(
-                    painter = painterResource(onBoardingData.image),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+            Image(
+                painter = painterResource(onBoardingData.image),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 15.dp),
+                verticalArrangement = Arrangement.Bottom
+
+            ) {
+                Text(
+                    "Pick some new habits to get started",
+                    fontFamily = interFont,
+                    fontSize = 36.sp,
+                    color = Color.Black,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
                 )
 
-                Column(
-                    modifier = Modifier.fillMaxSize().padding(bottom = 15.dp),
-                    verticalArrangement = Arrangement.Bottom
+                Spacer(Modifier.size(200.dp))
 
-                ) {
-                    Text(
-                        "Pick some new habits to get started",
-                        fontFamily = interFont,
-                        fontSize = 36.sp,
-                        color = Color.Black,
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                    )
+                Image(
+                    painter = painterResource(R.drawable.cards),
+                    contentDescription = null,
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
 
-                    Spacer(Modifier.size(200.dp))
+                Spacer(Modifier.size(25.dp))
 
-                    Image(
-                        painter = painterResource(R.drawable.cards),
-                        contentDescription = null,
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                    )
+                Button(
+                    onClick = { onFinished() },
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 16.dp),
 
-                    Spacer(Modifier.size(25.dp))
+                    colors = ButtonDefaults.buttonColors(containerColor = GrayToDo),
+                    shape = RoundedCornerShape(12.dp),
 
-                    Button(
-                        onClick = { onFinished() },
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-
-                        colors = ButtonDefaults.buttonColors(containerColor = GrayToDo),
-                        shape = RoundedCornerShape(12.dp),
-
-                        ) {
-                        Text("Continue", modifier = Modifier.padding(vertical = 8.dp))
-                    }
+                    ) {
+                    Text("Continue", modifier = Modifier.padding(vertical = 8.dp))
                 }
+            }
 
         }
-            // }
-        }
+        // }
     }
+}
 
-    @Preview(showBackground = true)
-    @Composable
-    fun OnBoardingScreenPreview() {
-        OnBoardingScreen {}
-    }
+@Preview(showBackground = true)
+@Composable
+fun OnBoardingScreenPreview() {
+    OnBoardingScreen {}
+}

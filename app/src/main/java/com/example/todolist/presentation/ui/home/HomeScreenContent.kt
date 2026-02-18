@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -115,8 +116,8 @@ fun HomeScreenContent(
                 //val bottomGuideLine = createGuidelineFromBottom(0.5f)
 
             Row(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp).systemBarsPadding(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 TextField(
                     modifier = Modifier
@@ -124,6 +125,7 @@ fun HomeScreenContent(
 //                            bottom.linkTo(bottomGuideLine)
 //                        }
                         .height(56.dp)
+                        .weight(1f)
                         .padding(start = 10.dp),
                     value = textFieldState,
                     label = { Text(text = "Write a task") },
@@ -207,7 +209,6 @@ fun HomeScreenContent(
             }
         }
     )
-
 }
 
 @Preview
